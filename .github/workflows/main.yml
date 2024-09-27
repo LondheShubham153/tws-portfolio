@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - main
+  workflow_dispatch:  # This enables manual triggering of the workflow  
 
 jobs:
   build-and-deploy:
@@ -20,4 +21,4 @@ jobs:
         aws-region: us-east-1
 
     - name: Deploy static site to S3 bucket
-      run: aws s3 sync . s3://tws-junoon --delete
+      run: aws s3 sync . s3://tws-github-demo --delete
