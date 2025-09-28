@@ -1,23 +1,25 @@
-name: Portfolio Deployment
+name: Deploy to S3
 
 on:
   push:
     branches:
-    - main
+      - main   # or your default branch
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v1
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1  # change if your bucket is in another region
 
-    - name: Deploy static site to S3 bucket
-      run: aws s3 sync . s3://tws-junoon --delete
+      - name: Sync files to S3 bucket
+        run: |
+          aws s3 sync . s3://asadullahkhanportfolio --delete --exclude ".git/*" --exclude ".github/*"
